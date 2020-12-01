@@ -1,0 +1,14 @@
+<?php
+
+return [
+    'name' => '{{moduleNamePlural}}',
+    /**
+     * Always use lower name without custom characters, spaces, etc
+     */
+    'permissions' => [
+        '{{moduleNamePluralLowerCase}}.browse',
+        '{{moduleNamePluralLowerCase}}.create',
+        '{{moduleNamePluralLowerCase}}.update',
+        '{{moduleNamePluralLowerCase}}.destroy'
+    ]
+];

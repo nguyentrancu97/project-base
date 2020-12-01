@@ -1,0 +1,51 @@
+<?php
+
+namespace Modules\{{moduleNamePlural}}\Repositories;
+
+use Modules\{{moduleNamePlural}}\Entities\{{moduleName}};
+use Prettus\Repository\Eloquent\BaseRepository;
+use Prettus\Validator\Exceptions\ValidatorException;
+
+/**
+ * Class {{moduleName}}Repository
+ * @package Modules\Platform\User\Repositories
+ */
+class {{moduleName}}Repository extends BaseRepository
+{
+    /**
+     * @return string
+     */
+    public function model()
+    {
+        return {{moduleName}}::class;
+    }
+
+    /**
+     * Save a new entity in repository
+     *
+     * @throws ValidatorException
+     *
+     * @param array $attributes
+     *
+     * @return {{moduleName}}
+     */
+    public function create(array $attributes)
+    {
+        return parent::create($attributes);
+    }
+
+    /**
+     * Update a entity in repository by id
+     *
+     * @throws ValidatorException
+     *
+     * @param array $attributes
+     * @param       $id
+     *
+     * @return {{moduleName}}
+     */
+    public function update(array $attributes, $id)
+    {
+        return parent::update($attributes, $id);
+    }
+}

@@ -1,0 +1,24 @@
+<?php
+
+use Illuminate\Http\Request;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::group(['middleware' => ['auth:admin']], function () {
+    Route::group(['prefix' => '{{moduleNamePluralLowerCase}}'], function () {
+        Route::get('', '{{moduleNamePlural}}Controller@index')->middleware('permission:{{moduleNamePluralLowerCase}}.browse');
+        Route::get('{id}', '{{moduleNamePlural}}Controller@show')->middleware('permission:{{moduleNamePluralLowerCase}}.browse');
+        Route::post('', '{{moduleNamePlural}}Controller@store')->middleware('permission:{{moduleNamePluralLowerCase}}.create');
+        Route::put('{id}', '{{moduleNamePlural}}Controller@update')->middleware('permission:{{moduleNamePluralLowerCase}}.update');
+    });
+});
+

@@ -1,0 +1,26 @@
+<?php
+namespace Modules\{{moduleNamePlural}}\Transformers;
+
+use Carbon\Carbon;
+use League\Fractal\TransformerAbstract;
+use Modules\{{moduleNamePlural}}\Entities\{{moduleName}};
+
+class {{moduleName}}Transformer extends TransformerAbstract
+{
+
+    /**
+     * List of resources possible to include
+     *
+     * @var array
+     */
+    protected $availableIncludes = [];
+
+    public function transform({{moduleName}} ${{moduleNameSingularLowerCase}})
+    {
+        return [
+            'id' => ${{moduleNameSingularLowerCase}}->id,
+            'created_at' => Carbon::parse(${{moduleNameSingularLowerCase}}->localize('created_at'))->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::parse(${{moduleNameSingularLowerCase}}->localize('updated_at'))->format('Y-m-d H:i:s'),
+        ];
+    }
+}

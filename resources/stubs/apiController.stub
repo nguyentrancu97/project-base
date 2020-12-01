@@ -1,0 +1,192 @@
+<?php
+
+namespace Modules\{{moduleNamePlural}}\Http\Controllers\Api;
+
+use App\Http\Controllers\Api\BaseApiController;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Modules\{{moduleNamePlural}}\Http\Requests\{{moduleName}}CreateApiRequest;
+use Modules\{{moduleNamePlural}}\Http\Requests\{{moduleName}}UpdateApiRequest;
+use Modules\{{moduleNamePlural}}\Repositories\{{moduleName}}Repository;
+use Modules\{{moduleNamePlural}}\Transformers\{{moduleName}}Transformer;
+
+
+/**
+ * Class {{moduleNamePlural}}Controller
+ * @property {{moduleName}}Repository $repository
+ * @package Modules\{{moduleNamePlural}}\Http\Controllers\Api
+ */
+class {{moduleNamePlural}}Controller extends BaseApiController
+{
+    /**
+     * {{moduleNamePlural}}Controller constructor.
+     * @param {{moduleName}}Repository $repository
+     */
+    public function __construct({{moduleName}}Repository $repository)
+    {
+        parent::__construct($repository);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/{{moduleNamePluralLowerCase}}",
+     *     summary="Display a listing of the {{moduleNamePluralLowerCase}}",
+     *     tags={"{{moduleName}}"},
+     *     operationId="list-{{moduleNamePluralLowerCase}}",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Số item trả về ở mỗi trang, mặc định là 15",
+     *         @OA\Schema(
+     *              type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Giá trị trang muốn lấy dữ liệu về, mặc định là 1",
+     *         @OA\Schema(
+     *              type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK"
+     *     )
+     * )
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function index(Request $request)
+    {
+        $data = $this->repository->paginate(intval($request->get('per_page')));
+        return $this->responseSuccess($this->transform($data, {{moduleName}}Transformer::class, $request));
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/{{moduleNamePluralLowerCase}}/{id}",
+     *     summary="Display a {{moduleNameSingularLowerCase}}",
+     *     tags={"{{moduleName}}"},
+     *     operationId="show-{{moduleNameSingularLowerCase}}",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Numeric ID of the {{moduleNameSingularLowerCase}}",
+     *         required=true,
+     *         @OA\Schema(
+     *              type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK"
+     *     )
+     * )
+     * @param $identifier
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function show($identifier, Request $request)
+    {
+        $entity = $this->repository->find($identifier);
+        return $this->responseSuccess($this->transform($entity, {{moduleName}}Transformer::class, $request));
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/{{moduleNamePluralLowerCase}}",
+     *     summary="Create new a {{moduleNameSingularLowerCase}}",
+     *     tags={"{{moduleName}}"},
+     *     operationId="create-new-{{moduleNameSingularLowerCase}}",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *           @OA\MediaType(
+     *               mediaType="application/json",
+     *               @OA\Schema(
+     *                  @OA\Property(
+     *                      property="name",
+     *                      type="string",
+     *                  )
+     *              )
+     *          )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK"
+     *     )
+     * )
+     * @param {{moduleName}}CreateApiRequest $request
+     * @return JsonResponse
+     */
+    public function store({{moduleName}}CreateApiRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $storeValues = $request->only([]);
+            $entity = $this->repository->create($storeValues);
+            DB::commit();
+            return $this->responseSuccess($this->transform($entity, {{moduleName}}Transformer::class, $request));
+        } catch (\Exception $e) {
+            Log::error($e);
+            DB::rollBack();
+            return $this->responseErrors(500, $e->getMessage());
+        }
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/{{moduleNamePluralLowerCase}}/{id}",
+     *     summary="Update a {{moduleNameSingularLowerCase}}",
+     *     tags={"{{moduleName}}"},
+     *     operationId="update-{{moduleNameSingularLowerCase}}",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Numeric ID of the {{moduleNameSingularLowerCase}}",
+     *         required=true,
+     *         @OA\Schema(
+     *              type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *           @OA\MediaType(
+     *               mediaType="application/json",
+     *               @OA\Schema(
+     *                  @OA\Property(
+     *                      property="name",
+     *                      type="string",
+     *                  )
+     *              )
+     *          )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK"
+     *     )
+     * )
+     * @param $identifier
+     * @param {{moduleName}}UpdateApiRequest $request
+     * @return JsonResponse
+     */
+    public function update($identifier, {{moduleName}}UpdateApiRequest $request)
+    {
+        $entity = $this->repository->find($identifier);
+        $storeValues = $request->only([]);
+        DB::beginTransaction();
+        try {
+            $entity = $this->repository->update($storeValues, $entity->id);
+            DB::commit();
+            return $this->responseSuccess($this->transform($entity, {{moduleName}}Transformer::class, $request));
+        } catch (\Exception $e) {
+            Log::error($e);
+            DB::rollBack();
+            return $this->responseErrors(500, $e->getMessage());
+        }
+    }
+}

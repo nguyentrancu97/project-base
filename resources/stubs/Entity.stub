@@ -1,0 +1,21 @@
+<?php
+
+namespace Modules\{{moduleNamePlural}}\Entities;
+use Illuminate\Database\Eloquent\Model;
+use App\UTCTimeSupport\HasLocalDates;
+
+/**
+ * Class {{moduleName}}
+ * @property int $id
+ * @package Modules\{{moduleNamePlural}}\Entities
+ */
+class {{moduleName}} extends Model
+{
+    use HasLocalDates;
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [];
+}

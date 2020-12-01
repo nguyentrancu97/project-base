@@ -1,0 +1,28 @@
+<?php
+
+namespace Modules\{{moduleNamePlural}}\Http\Requests;
+use App\Http\Requests\ApiBaseRequest;
+
+/**
+ * {{moduleNamePlural}} API Request
+ *
+ * Class {{moduleName}}CreateApiRequest
+ * @package Modules\Api\Http\Requests
+ */
+class {{moduleName}}CreateApiRequest extends ApiBaseRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    public function rules()
+    {
+        return [];
+    }
+}
